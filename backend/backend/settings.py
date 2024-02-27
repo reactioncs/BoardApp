@@ -31,6 +31,8 @@ DEBUG = config.get('DJANGO_DEBUG', '') != 'False'
 
 ALLOWED_HOSTS = ["*"]
 
+AUTH_USER_MODEL = "api.AppUser"
+
 
 # Application definition
 
