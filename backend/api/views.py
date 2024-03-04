@@ -35,12 +35,6 @@ class UserView(APIView):
 
         return Response(UserSerializer(user).data, status=status.HTTP_200_OK)
 
-    def delete(self, request):
-        user_id = request.user.id
-        user = AppUser.objects.get(id=user_id)
-        user.delete()
-        return Response("delete successful.", status=status.HTTP_200_OK)
-
 
 class UserRegisterView(APIView):
     permission_classes = [AllowAny]
@@ -56,9 +50,12 @@ class UserRegisterView(APIView):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
-class UserLoginView(APIView):
+class UserAuthViewBase(APIView):
     permission_classes = [AllowAny]
     serializer_class = UserLoginSerializer
+
+    @staticmethod
+    def operation(request, user) -> str: ...
 
     def post(self, request):
         serializer = UserLoginSerializer(data=request.data)
@@ -70,8 +67,28 @@ class UserLoginView(APIView):
         if user is None:
             return Response("Wrong password or username!", status=status.HTTP_400_BAD_REQUEST)
 
+        try:
+            message = self.operation(request, user)
+        except Exception as ex:
+            return Response(str(ex), status=status.HTTP_400_BAD_REQUEST)
+
+        return Response(message, status=status.HTTP_200_OK)
+
+
+class UserLoginView(UserAuthViewBase):
+    @staticmethod
+    def operation(request, user) -> str:
         login(request, user)
-        return Response("Log in successful", status=status.HTTP_200_OK)
+        return "Log in successful."
+
+
+class UserDeleteView(UserAuthViewBase):
+    @staticmethod
+    def operation(request, user: AppUser) -> str:
+        if request.user != user:
+            raise Exception("Invalid operation!")
+        user.delete()
+        return "Delete account successful."
 
 
 class UserLogoutView(APIView):
@@ -130,18 +147,26 @@ class CommentAPIView(APIView):
     permission_classes = [IsAuthenticated]
     serializer_class = CommentSerializer
 
-    def get(self, request, pk=None):
-        if pk is None:
-            return Response("Missing comment id.", status=status.HTTP_400_BAD_REQUEST)
+    def get(self, request, post_id, comment_id=None):
+        if post_id is None:
+            return Response("Missing postId.", status=status.HTTP_400_BAD_REQUEST)
 
         try:
-            comment = Comment.objects.get(id=pk)
-        except Comment.DoesNotExist:
-            return Response("Comment doesn't exist.", status=status.HTTP_404_NOT_FOUND)
-        return Response(CommentSerializer(comment).data, status=status.HTTP_200_OK)
+            post = Post.objects.get(id=post_id)
+        except Post.DoesNotExist:
+            return Response("Invalid postId.", status=status.HTTP_404_NOT_FOUND)
 
-    def post(self, request):
-        post_id = request.query_params.get("postId", None)
+        if comment_id is None:
+            comments = Comment.objects.filter(post=post)
+            return Response(CommentSerializer(comments, many=True).data, status=status.HTTP_200_OK)
+        else:
+            try:
+                comment = Comment.objects.get(id=comment_id, post=post)
+            except Comment.DoesNotExist:
+                return Response("Comment doesn't exist.", status=status.HTTP_404_NOT_FOUND)
+            return Response(CommentSerializer(comment).data, status=status.HTTP_200_OK)
+
+    def post(self, request, post_id, comment_id=None):
         if post_id is None:
             return Response("Missing postId.", status=status.HTTP_400_BAD_REQUEST)
 
@@ -158,12 +183,20 @@ class CommentAPIView(APIView):
         serializer.save(user=self.request.user, post=post)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-    def delete(self, request, pk=None):
-        if pk is None:
+    def delete(self, request, post_id, comment_id=None):
+        if post_id is None:
+            return Response("Missing postId.", status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            post = Post.objects.get(id=post_id)
+        except Post.DoesNotExist:
+            return Response("Invalid postId.", status=status.HTTP_404_NOT_FOUND)
+
+        if comment_id is None:
             return Response("Missing comment id.", status=status.HTTP_400_BAD_REQUEST)
 
         try:
-            comment = Comment.objects.get(id=pk)
+            comment = Comment.objects.get(id=comment_id, post=post)
         except Comment.DoesNotExist:
             return Response("Post doesn't exist.", status=status.HTTP_404_NOT_FOUND)
 
