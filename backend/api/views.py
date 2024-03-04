@@ -136,7 +136,7 @@ class PostAPIView(APIView):
             return Response("Post doesn't exist.", status=status.HTTP_404_NOT_FOUND)
 
         if not (post.user.id == request.user.id or request.user.is_superuser):
-            return Response("Authentication error.", status=status.HTTP_400_BAD_REQUEST)
+            return Response("Authentication error.", status=status.HTTP_401_UNAUTHORIZED)
 
         post.delete()
         return Response("Post deleted.", status=status.HTTP_200_OK)
@@ -201,7 +201,7 @@ class CommentAPIView(APIView):
             return Response("Post doesn't exist.", status=status.HTTP_404_NOT_FOUND)
 
         if not (comment.user.id == request.user.id or request.user.is_superuser):
-            return Response("Authentication error.", status=status.HTTP_400_BAD_REQUEST)
+            return Response("Authentication error.", status=status.HTTP_401_UNAUTHORIZED)
 
         comment.delete()
         return Response("Comment deleted.", status=status.HTTP_200_OK)
