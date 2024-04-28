@@ -1,11 +1,39 @@
-import { Box } from "@mui/material";
+import { Box, useMediaQuery } from "@mui/material";
+import { useSelector } from "react-redux";
 
+import { RootState } from "../state/store";
 import Navbar from "../components/Navbar";
+import UserWidget from "../components/UserWidget";
 
 export function HomePage() {
+    const isNonMobileScreens = useMediaQuery("(min-width:1000px)");
+    const user = useSelector((state: RootState) => state.auth.user);
+
+    if (!user)
+        return null;
+
     return (
         <Box>
             <Navbar />
+            <Box
+                width="100%"
+                padding="2rem 6%"
+                display={isNonMobileScreens ? "flex" : "block"}
+                gap="0.5rem"
+                justifyContent="space-between"
+            >
+                <Box flexBasis={isNonMobileScreens ? "26%" : undefined}>
+                    <UserWidget user={user} />
+                </Box>
+                
+                <Box
+                    flexBasis={isNonMobileScreens ? "42%" : undefined}
+                    mt={isNonMobileScreens ? undefined : "2rem"}
+                >
+
+                </Box>
+            </Box>
+
             <Box sx={{ width: 200, height: 80 }} bgcolor="#dfeaf7" />
             <Box sx={{ width: 200, height: 80 }} bgcolor="#bfd5f0" />
             <Box sx={{ width: 200, height: 80 }} bgcolor="#9ec1e8" />
