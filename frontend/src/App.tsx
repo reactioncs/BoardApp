@@ -32,17 +32,17 @@ function ProtectedRoute({ children }: { children: JSX.Element }) {
         const getUser = async () => {
             const userUrl = `${import.meta.env.VITE_API_URL}/api/user/`;
 
-            const userApiResponse = await fetch(userUrl, {
+            const response = await fetch(userUrl, {
                 method: "GET",
                 headers: { "Content-Type": "application/json" },
                 credentials: "include",
             });
 
-            if (userApiResponse.status !== 200) {
+            if (response.status !== 200) {
                 console.log("No user found.");
                 navigate("/login");
             } else {
-                const user: User = await userApiResponse.json();
+                const user: User = await response.json();
                 console.log(`Welcome ${user.username}.`);
                 dispatch(setLogin({ user }));
             }

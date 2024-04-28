@@ -38,6 +38,7 @@ declare module "@mui/material/styles" {
 
     interface PaletteColor {
         medium?: string;
+        mediumMain?: string;
     }
 
     interface TypeBackground {
