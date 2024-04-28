@@ -1,6 +1,6 @@
-import { useMemo } from "react";
-import { RouterProvider, createBrowserRouter, Navigate, Outlet } from "react-router-dom";
-import { Provider, useSelector } from "react-redux";
+import { useEffect, useMemo } from "react";
+import { RouterProvider, createBrowserRouter, Outlet, useNavigate } from "react-router-dom";
+import { Provider, useDispatch, useSelector } from "react-redux";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { CssBaseline } from "@mui/material";
 
@@ -9,9 +9,11 @@ import { RootState, store } from "./state/store";
 import { themeSettings } from "./theme";
 import { HomePage } from "./pages/HomePage";
 import { LoginPage } from "./pages/LoginPage";
+import { setLogin } from "./state/authSlice";
+import { User } from "./types/authTypes";
 
 function Theme({ children }: { children: JSX.Element }) {
-    const mode = useSelector((state: RootState) => state.auth.mode)
+    const mode = useSelector((state: RootState) => state.preference.mode)
     const theme = useMemo(() => createTheme(themeSettings(mode)), [mode]);
 
     return (
@@ -23,10 +25,31 @@ function Theme({ children }: { children: JSX.Element }) {
 }
 
 function ProtectedRoute({ children }: { children: JSX.Element }) {
-    const user = useSelector((state: RootState) => state.auth.user)
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
 
-    if (user === null)
-        return <Navigate to="/login" />;
+    useEffect(() => {
+        const getUser = async () => {
+            const userUrl = `${import.meta.env.VITE_API_URL}/api/user/`;
+
+            const userApiResponse = await fetch(userUrl, {
+                method: "GET",
+                headers: { "Content-Type": "application/json" },
+                credentials: "include",
+            });
+
+            if (userApiResponse.status !== 200) {
+                console.log("No user found.");
+                navigate("/login");
+            } else {
+                const user: User = await userApiResponse.json();
+                console.log(`Welcome ${user.username}.`);
+                dispatch(setLogin({ user }));
+            }
+        };
+
+        getUser();
+    }, []);
 
     return children;
 }

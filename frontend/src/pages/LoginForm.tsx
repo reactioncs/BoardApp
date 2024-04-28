@@ -91,8 +91,6 @@ function LoginForm() {
 
         const user: User = await userApiResponse.json();
 
-        console.log(user);
-
         dispatch(setLogin({ user }));
 
         onSubmitProps.resetForm();

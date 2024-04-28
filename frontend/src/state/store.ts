@@ -1,13 +1,14 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { createListenerMiddleware, isAnyOf } from "@reduxjs/toolkit";
-import authReducer, { toggleMode, setLogin, setLogout, setPosts, setPost, saveToLocalStorage } from "./authSlice";
+import authReducer from "./authSlice";
+import preferenceReducer, { toggleMode, saveToLocalStorage } from "./preferenceSlice";
 import counterReducer from "./counterSlice";
 
 export const listenerMiddleware = createListenerMiddleware();
 listenerMiddleware.startListening({
-    matcher: isAnyOf(toggleMode, setLogin, setLogout, setPosts, setPost),
+    matcher: isAnyOf(toggleMode),
     effect: (_, listenerApi) => {
-        const state = (listenerApi.getState() as RootState).auth;
+        const state = (listenerApi.getState() as RootState).preference;
         saveToLocalStorage(state);
     },
 });
@@ -15,6 +16,7 @@ listenerMiddleware.startListening({
 export const store = configureStore({
     reducer: {
         auth: authReducer,
+        preference: preferenceReducer,
         counter: counterReducer,
     },
     middleware: getDefaultMiddleware =>

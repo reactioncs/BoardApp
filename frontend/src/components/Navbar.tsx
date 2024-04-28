@@ -5,7 +5,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-import { toggleMode, setLogout } from "../state/authSlice";
+import { setLogout } from "../state/authSlice";
+import { toggleMode } from "../state/preferenceSlice";
 import { RootState } from "../state/store";
 import FlexBetween from "./FlexBetween";
 
@@ -15,9 +16,9 @@ function Navbar() {
     const navigate = useNavigate();
     const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
     const user = useSelector((state: RootState) => state.auth.user);
-    const mode = useSelector((state: RootState) => state.auth.mode);
+    const mode = useSelector((state: RootState) => state.preference.mode);
 
-    const fullName = user === null ? "No User" : `${user.firstName} ${user.lastName}`;
+    const fullName = user === null ? "---" : `${user.firstName} ${user.lastName}`;
 
     const handleLogout = async () => {
         if (user === null)
@@ -35,6 +36,7 @@ function Navbar() {
             },
         });
         dispatch(setLogout());
+        navigate("/login");
     }
 
     return (
