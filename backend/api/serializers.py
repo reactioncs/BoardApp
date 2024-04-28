@@ -6,10 +6,13 @@ AppUser.is_authenticated
 
 class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
+    firstName = serializers.CharField(source="first_name", required=True)
+    lastName = serializers.CharField(source="last_name", required=True)
+    profilePicture = serializers.CharField(source="profile_picture", required=False, default=None)
 
     class Meta:
         model = AppUser
-        fields = ["id", "username", "password", "first_name", "last_name", "email", "location", "profile_picture"]
+        fields = ["id", "username", "password", "firstName", "lastName", "email", "location", "profilePicture"]
 
     def create(self, validated_data) -> AppUser:
         return AppUser.objects.create_user(**validated_data)

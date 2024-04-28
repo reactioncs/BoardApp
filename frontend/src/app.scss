@@ -1,3 +1,13 @@
-* {
-    font-family: sans-serif;
+@font-face {
+    font-family: "Rubik";
+    src: local("Rubik"), url("static/Rubik-VariableFont_wght.ttf") format("truetype");
+}
+
+html,
+body,
+#root,
+.app {
+    height: 100%;
+    width: 100%;
+    font-family: "Rubik", sans-serif;
 }
