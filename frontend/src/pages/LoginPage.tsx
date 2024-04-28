@@ -1,9 +1,7 @@
 import { Box, Typography, useMediaQuery } from "@mui/material";
-import { useTheme } from "@mui/material/styles";
-import LoginForm from "./LoginForm";
+import LoginForm from "../Scenes/LoginForm";
 
 export function LoginPage() {
-    const theme = useTheme();
     const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
 
     return (

@@ -9,9 +9,9 @@ import {
 } from "@mui/icons-material";
 
 import { User } from "../types/authTypes";
-import FlexBetween from "./FlexBetween";
-import WidgetWrapper from "./WidgetWrapper";
-import UserImage from "./UserImage";
+import FlexBetween from "../components/FlexBetween";
+import WidgetWrapper from "../components/WidgetWrapper";
+import UserImage from "../components/UserImage";
 
 function UserWidget({ user }: { user: User }) {
     const { palette } = useTheme();
@@ -39,7 +39,7 @@ function UserWidget({ user }: { user: User }) {
                 onClick={() => navigate(`/profile/${userId}`)}
             >
                 <FlexBetween gap="1rem">
-                    <UserImage image={"/static/userPicture/1.jpg"} />
+                    <UserImage image={"/static/sample/1.jpg"} />
                     <Box>
                         <Typography
                             variant="h4"

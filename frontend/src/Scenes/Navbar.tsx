@@ -8,7 +8,7 @@ import axios from "axios";
 import { setLogout } from "../state/authSlice";
 import { toggleMode } from "../state/preferenceSlice";
 import { RootState } from "../state/store";
-import FlexBetween from "./FlexBetween";
+import FlexBetween from "../components/FlexBetween";
 
 function Navbar() {
     const [isMobileMenuToggled, setIsMobileMenuToggled] = useState(false);

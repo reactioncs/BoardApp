@@ -15,9 +15,9 @@ import axios from "axios";
 
 import { RootState } from "../state/store";
 import { Post } from "../types/contentTypes";
-import WidgetWrapper from "./WidgetWrapper";
-import FlexBetween from "./FlexBetween";
-import UserImage from "./UserImage";
+import WidgetWrapper from "../components/WidgetWrapper";
+import FlexBetween from "../components/FlexBetween";
+import UserImage from "../components/UserImage";
 
 function UserWidget() {
     // const [isImage, setIsImage] = useState(false);
@@ -54,7 +54,7 @@ function UserWidget() {
     return (
         <WidgetWrapper>
             <FlexBetween gap="1.5rem">
-                <UserImage image={"/static/userPicture/1.jpg"} />
+                <UserImage image={"/static/sample/1.jpg"} />
                 <InputBase
                     placeholder="What's on your mind..."
                     onChange={(e) => setPost(e.target.value)}
