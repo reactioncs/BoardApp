@@ -7,14 +7,14 @@ import { Box, IconButton, Typography } from "@mui/material";
 import FlexBetween from "./FlexBetween";
 import UserImage from "./UserImage";
 
-interface FriendProp {
+interface FriendBoxProp {
     id: string;
     name: string;
     subtitle: string;
     picPath: string;
 }
 
-function Friend({ id, name, subtitle, picPath }: FriendProp) {
+function FriendBox({ id, name, subtitle, picPath }: FriendBoxProp) {
     // const dispatch = useDispatch();
     const navigate = useNavigate();
 
@@ -71,4 +71,4 @@ function Friend({ id, name, subtitle, picPath }: FriendProp) {
     );
 }
 
-export default Friend;
+export default FriendBox;

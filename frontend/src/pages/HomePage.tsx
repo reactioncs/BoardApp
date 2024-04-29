@@ -6,6 +6,8 @@ import Navbar from "../Scenes/Navbar";
 import UserWidget from "../Scenes/UserWidget";
 import MyPostWidget from "../Scenes/MyPostWidget";
 import PostsWidget from "../Scenes/PostsWidget";
+import AdvertWidget from "../Scenes/AdvertWidget";
+import FriendsWidget from "../Scenes/FriendsWidget";
 
 export function HomePage() {
     const isNonMobileScreens = useMediaQuery("(min-width:1000px)");
@@ -38,9 +40,9 @@ export function HomePage() {
 
                 {isNonMobileScreens && (
                     <Box flexBasis="26%">
-                        {/* <AdvertWidget /> */}
+                        <AdvertWidget />
                         <Box m="2rem 0" />
-                        {/* <FriendListWidget userId={_id} /> */}
+                        <FriendsWidget />
                     </Box>
                 )}
             </Box>

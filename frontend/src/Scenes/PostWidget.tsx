@@ -9,7 +9,7 @@ import {
 } from "@mui/icons-material";
 import { Post } from "../types/contentTypes";
 import WidgetWrapper from "../components/WidgetWrapper";
-import Friend from "../components/Friend";
+import FriendBox from "../components/FriendBox";
 import FlexBetween from "../components/FlexBetween";
 import CommentBox from "../components/CommentBox";
 
@@ -26,7 +26,7 @@ function PostWidget({ post }: { post: Post }) {
 
     return (
         <WidgetWrapper m="2rem 0">
-            <Friend
+            <FriendBox
                 id={"postUserId"}
                 name={"Mike"}
                 subtitle={"New york"}
