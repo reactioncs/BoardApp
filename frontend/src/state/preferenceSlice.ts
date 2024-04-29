@@ -22,18 +22,6 @@ export const preferenceSlice = createSlice({
         toggleMode: state => {
             state.mode = state.mode === "light" ? "dark" : "light";
         },
-        // setPosts: (state, action: PayloadAction<{ posts: Post[] }>) => {
-        //     state.posts = action.payload.posts;
-        // },
-        // setPost: (state, action) => {
-        //     const updatedPosts = state.posts.map(post => {
-        //         if (post.id === action.payload.post_id)
-        //             return action.payload.post;
-        //         else
-        //             return post;
-        //     });
-        //     state.posts = updatedPosts;
-        // },
     }
 });
 

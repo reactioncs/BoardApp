@@ -5,6 +5,7 @@ import { RootState } from "../state/store";
 import Navbar from "../Scenes/Navbar";
 import UserWidget from "../Scenes/UserWidget";
 import MyPostWidget from "../Scenes/MyPostWidget";
+import PostsWidget from "../Scenes/PostsWidget";
 
 export function HomePage() {
     const isNonMobileScreens = useMediaQuery("(min-width:1000px)");
@@ -32,6 +33,7 @@ export function HomePage() {
                     mt={isNonMobileScreens ? undefined : "2rem"}
                 >
                     <MyPostWidget />
+                    <PostsWidget />
                 </Box>
 
                 {isNonMobileScreens && (
@@ -43,16 +45,35 @@ export function HomePage() {
                 )}
             </Box>
 
-            <Box sx={{ width: 200, height: 80 }} bgcolor="#dfeaf7" />
-            <Box sx={{ width: 200, height: 80 }} bgcolor="#bfd5f0" />
-            <Box sx={{ width: 200, height: 80 }} bgcolor="#9ec1e8" />
-            <Box sx={{ width: 200, height: 80 }} bgcolor="#7baddf" />
-            <Box sx={{ width: 200, height: 80 }} bgcolor="#539ad7" />
-            <Box sx={{ width: 200, height: 80 }} bgcolor="#0287cf" />
-            <Box sx={{ width: 200, height: 80 }} bgcolor="#176ba2" />
-            <Box sx={{ width: 200, height: 80 }} bgcolor="#1c4f77" />
-            <Box sx={{ width: 200, height: 80 }} bgcolor="#19364e" />
-            <Box sx={{ width: 200, height: 80 }} bgcolor="#131e29" />
+            <Box>
+                <Box display="flex">
+                    <Box flexGrow="1" sx={{ height: 80 }} bgcolor="#dfeaf7" >#dfeaf7</Box>
+                    <Box flexGrow="1" sx={{ height: 80 }} bgcolor="#bfd5f0" >#bfd5f0</Box>
+                    <Box flexGrow="1" sx={{ height: 80 }} bgcolor="#9ec1e8" >#9ec1e8</Box>
+                    <Box flexGrow="1" sx={{ height: 80 }} bgcolor="#7baddf" >#7baddf</Box>
+                    <Box flexGrow="1" sx={{ height: 80 }} bgcolor="#539ad7" >#539ad7</Box>
+                    <Box flexGrow="1" sx={{ height: 80 }} bgcolor="#0287cf" >#0287cf</Box>
+                    <Box flexGrow="1" sx={{ height: 80 }} bgcolor="#176ba2" >#176ba2</Box>
+                    <Box flexGrow="1" sx={{ height: 80 }} bgcolor="#1c4f77" >#1c4f77</Box>
+                    <Box flexGrow="1" sx={{ height: 80 }} bgcolor="#19364e" >#19364e</Box>
+                    <Box flexGrow="1" sx={{ height: 80 }} bgcolor="#131e29" >#131e29</Box>
+                </Box>
+                <Box display="flex">
+                    <Box flexGrow="1" sx={{ height: 80 }} bgcolor="#FFFFFF" >#FFFFFF</Box>
+                    <Box flexGrow="1" sx={{ height: 80 }} bgcolor="#F6F6F6" >#F6F6F6</Box>
+                    <Box flexGrow="1" sx={{ height: 80 }} bgcolor="#F0F0F0" >#F0F0F0</Box>
+                    <Box flexGrow="1" sx={{ height: 80 }} bgcolor="#E0E0E0" >#E0E0E0</Box>
+                    <Box flexGrow="1" sx={{ height: 80 }} bgcolor="#C2C2C2" >#C2C2C2</Box>
+                    <Box flexGrow="1" sx={{ height: 80 }} bgcolor="#A3A3A3" >#A3A3A3</Box>
+                    <Box flexGrow="1" sx={{ height: 80 }} bgcolor="#858585" >#858585</Box>
+                    <Box flexGrow="1" sx={{ height: 80 }} bgcolor="#666666" >#666666</Box>
+                    <Box flexGrow="1" sx={{ height: 80 }} bgcolor="#4D4D4D" >#4D4D4D</Box>
+                    <Box flexGrow="1" sx={{ height: 80 }} bgcolor="#333333" >#333333</Box>
+                    <Box flexGrow="1" sx={{ height: 80 }} bgcolor="#1A1A1A" >#1A1A1A</Box>
+                    <Box flexGrow="1" sx={{ height: 80 }} bgcolor="#0A0A0A" >#0A0A0A</Box>
+                    <Box flexGrow="1" sx={{ height: 80 }} bgcolor="#000000" >#000000</Box>
+                </Box>
+            </Box>
         </Box>
     );
 }

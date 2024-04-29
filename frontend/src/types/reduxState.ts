@@ -1,5 +1,5 @@
 import { User } from "./authTypes";
-// import { Post } from "./contentTypes";
+import { Post } from "./contentTypes";
 
 export interface PreferenceState {
     mode: string;
@@ -7,4 +7,5 @@ export interface PreferenceState {
 
 export interface AuthState {
     user: User | null;
+    posts: Post[];
 }

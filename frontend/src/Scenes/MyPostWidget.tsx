@@ -1,4 +1,5 @@
 import { useTheme } from "@mui/material/styles";
+import { Box, Button, Divider, IconButton, InputBase, Typography, useMediaQuery } from "@mui/material";
 import {
     EditOutlined,
     DeleteOutlined,
@@ -8,9 +9,8 @@ import {
     MicOutlined,
     MoreHorizOutlined,
 } from "@mui/icons-material";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
-import { Box, Button, Divider, IconButton, InputBase, Typography, useMediaQuery } from "@mui/material";
 import axios from "axios";
 
 import { RootState } from "../state/store";
@@ -18,13 +18,16 @@ import { Post } from "../types/contentTypes";
 import WidgetWrapper from "../components/WidgetWrapper";
 import FlexBetween from "../components/FlexBetween";
 import UserImage from "../components/UserImage";
+import { setPosts } from "../state/authSlice";
 
-function UserWidget() {
+function MyPostWidget() {
+    const { palette } = useTheme();
+    const dispatch = useDispatch();
     // const [isImage, setIsImage] = useState(false);
     // const [image, setImage] = useState(null);
-    const [post, setPost] = useState("");
-    const { palette } = useTheme();
+    const [postInput, setPostInput] = useState("");
     const user = useSelector((state: RootState) => state.auth.user);
+    const posts = useSelector((state: RootState) => state.auth.posts);
     const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
     const mediumMain = palette.neutral?.mediumMain;
     const medium = palette.neutral?.medium;
@@ -33,22 +36,26 @@ function UserWidget() {
         return null;
 
     const handlePost = async () => {
-        const postUrl = `${import.meta.env.VITE_API_URL}/api/post/`;
-        const response = await axios.post(postUrl, {
-            content: post
-        }, {
-            timeout: 60000,
-            withCredentials: true,
-            xsrfCookieName: 'csrftoken',
-            xsrfHeaderName: 'X-CSRFToken',
-            withXSRFToken: true,
-            headers: {
-                Accept: "application/json",
-            },
-        });
+        try {
+            const postUrl = `${import.meta.env.VITE_API_URL}/api/posts/`;
+            const response = await axios.post(postUrl, {
+                content: postInput
+            }, {
+                timeout: 60000,
+                withCredentials: true,
+                xsrfCookieName: 'csrftoken',
+                xsrfHeaderName: 'X-CSRFToken',
+                withXSRFToken: true,
+                headers: {
+                    Accept: "application/json",
+                },
+            });
 
-        const uploadedPost: Post = await response.data;
-        console.log(uploadedPost);
+            const uploadedPost: Post = await response.data;
+            dispatch(setPosts({ posts: [uploadedPost, ...posts] }));
+        } finally {
+            setPostInput("");
+        }
     };
 
     return (
@@ -57,8 +64,8 @@ function UserWidget() {
                 <UserImage image={"/static/sample/1.jpg"} />
                 <InputBase
                     placeholder="What's on your mind..."
-                    onChange={(e) => setPost(e.target.value)}
-                    value={post}
+                    onChange={(e) => setPostInput(e.target.value)}
+                    value={postInput}
                     sx={{
                         width: "100%",
                         backgroundColor: palette.neutral?.light,
@@ -77,7 +84,7 @@ function UserWidget() {
             >
                 <FlexBetween>
                     <Box
-                        border={`2px dashed ${palette.primary.main}`}
+                        border={`1px solid ${palette.primary.light}`}
                         p="1rem"
                         width="100%"
                         sx={{ "&:hover": { cursor: "pointer" } }}
@@ -137,7 +144,7 @@ function UserWidget() {
                 )}
 
                 <Button
-                    disabled={!post}
+                    disabled={!postInput}
                     onClick={handlePost}
                     sx={{
                         color: palette.background.alt,
@@ -152,4 +159,4 @@ function UserWidget() {
     );
 }
 
-export default UserWidget;
+export default MyPostWidget;

@@ -11,6 +11,7 @@ import { HomePage } from "./pages/HomePage";
 import { LoginPage } from "./pages/LoginPage";
 import { setLogin } from "./state/authSlice";
 import { User } from "./types/authTypes";
+import axios from "axios";
 
 function Theme({ children }: { children: JSX.Element }) {
     const mode = useSelector((state: RootState) => state.preference.mode)
@@ -32,17 +33,23 @@ function ProtectedRoute({ children }: { children: JSX.Element }) {
         const getUser = async () => {
             const userUrl = `${import.meta.env.VITE_API_URL}/api/user/`;
 
-            const response = await fetch(userUrl, {
-                method: "GET",
-                headers: { "Content-Type": "application/json" },
-                credentials: "include",
+            const response = await axios.get(userUrl, {
+                timeout: 60000,
+                withCredentials: true,
+                xsrfCookieName: 'csrftoken',
+                xsrfHeaderName: 'X-CSRFToken',
+                withXSRFToken: true,
+                headers: {
+                    Accept: "application/json",
+                },
+                validateStatus: status => status < 500,
             });
 
             if (response.status !== 200) {
                 console.log("No user found.");
                 navigate("/login");
             } else {
-                const user: User = await response.json();
+                const user: User = await response.data;
                 console.log(`Welcome ${user.username}.`);
                 dispatch(setLogin({ user }));
             }

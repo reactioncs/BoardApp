@@ -10,8 +10,9 @@ urlpatterns = [
     path("user/", UserView.as_view()),
     path("user/<slug:pk>/", UserView.as_view()),
 
-    path("post/", PostAPIView.as_view()),
-    path("post/<slug:pk>", PostAPIView.as_view()),
-    path("post/<slug:post_id>/comment/", CommentAPIView.as_view()),
-    path("post/<slug:post_id>/comment/<slug:comment_id>", CommentAPIView.as_view()),
+    path("posts/", PostAPIView.as_view()),
+    path("posts/<slug:post_id>/", PostAPIView.as_view()),
+    path("posts/<slug:user_id>/posts/", PostAPIView.as_view()),
+    path("posts/<slug:post_id>/comments/", CommentAPIView.as_view()),
+    path("posts/<slug:post_id>/comments/<slug:comment_id>/", CommentAPIView.as_view()),
 ]

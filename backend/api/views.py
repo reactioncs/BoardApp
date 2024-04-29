@@ -106,16 +106,26 @@ class PostAPIView(APIView):
     permission_classes = [IsAuthenticated]
     serializer_class = PostSerializer
 
-    def get(self, request, pk=None):
-        if pk is None:
-            posts = Post.objects.all()
-            return Response(PostSerializer(posts, many=True).data, status=status.HTTP_200_OK)
-        else:
+    def get(self, request, post_id=None, user_id=None):
+        # get specific post by post_id
+        if post_id is not None:
             try:
-                post = Post.objects.get(id=pk)
+                post = Post.objects.get(id=post_id).order_by('-created')
             except Post.DoesNotExist:
                 return Response("Post doesn't exist.", status=status.HTTP_404_NOT_FOUND)
             return Response(PostSerializer(post).data, status=status.HTTP_200_OK)
+        # get posts of a specific user
+        elif user_id is not None:
+            try:
+                user = AppUser.objects.get(id=user_id).order_by('-created')
+            except AppUser.DoesNotExist:
+                return Response("User doesn't exist.", status=status.HTTP_404_NOT_FOUND)
+            posts = Post.objects.filter(user=user)
+            return Response(PostSerializer(posts, many=True).data, status=status.HTTP_200_OK)
+        # default
+        else:
+            posts = Post.objects.all().order_by('-created')
+            return Response(PostSerializer(posts, many=True).data, status=status.HTTP_200_OK)
 
     def post(self, request):
         serializer = PostSerializer(data=request.data)
