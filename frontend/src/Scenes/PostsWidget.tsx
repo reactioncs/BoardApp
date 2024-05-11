@@ -38,7 +38,7 @@ function PostsWidget() {
 
     return (
         <>
-            {posts.map(post => <PostWidget post={post} />)}
+            {posts.map(post => <PostWidget key={post.id} post={post} />)}
         </>
     );
 }
