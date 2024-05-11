@@ -9,7 +9,7 @@ import PostsWidget from "../Scenes/PostsWidget";
 import AdvertWidget from "../Scenes/AdvertWidget";
 import FriendsWidget from "../Scenes/FriendsWidget";
 
-export function HomePage() {
+function HomePage() {
     const isNonMobileScreens = useMediaQuery("(min-width:1000px)");
     const user = useSelector((state: RootState) => state.auth.user);
 
@@ -79,3 +79,5 @@ export function HomePage() {
         </Box>
     );
 }
+
+export default HomePage;

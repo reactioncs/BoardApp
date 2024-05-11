@@ -1,17 +1,17 @@
-import { useEffect, useMemo } from "react";
+import { lazy, useEffect, useMemo } from "react";
 import { RouterProvider, createBrowserRouter, Outlet, useNavigate } from "react-router-dom";
 import { Provider, useDispatch, useSelector } from "react-redux";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { CssBaseline } from "@mui/material";
+import axios from "axios";
 
 import "./app.scss";
 import { RootState, store } from "./state/store";
 import { themeSettings } from "./theme";
-import { HomePage } from "./pages/HomePage";
-import { LoginPage } from "./pages/LoginPage";
 import { setLogin } from "./state/authSlice";
 import { User } from "./types/authTypes";
-import axios from "axios";
+const HomePage = lazy(() => import("./pages/HomePage"));
+const LoginPage = lazy(() => import("./pages/LoginPage"));
 
 function Theme({ children }: { children: JSX.Element }) {
     const mode = useSelector((state: RootState) => state.preference.mode)
