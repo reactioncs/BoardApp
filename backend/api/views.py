@@ -1,8 +1,11 @@
+from django.conf import settings
 from django.contrib.auth import authenticate, login, logout
+from django.shortcuts import redirect
 from rest_framework import status
 from rest_framework import generics
 from rest_framework.authentication import BasicAuthentication, SessionAuthentication
 from rest_framework.views import APIView
+from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny
 
@@ -10,14 +13,35 @@ from .serializers import *
 from .models import *
 
 
-class UserListView(generics.ListAPIView):
-    """
-    DEBUG ONLY
-    """
+@api_view(["GET"])
+@authentication_classes([BasicAuthentication])
+@permission_classes([AllowAny])
+def api_default(request):
+    response = [
+        "user/register/",
+        "user/login/",
+        "user/logout/",
+        "user/delete/",
+        "user/",
+        "user/<slug:pk>/",
+        "posts/",
+        "posts/<slug:post_id>/",
+        "posts/<slug:user_id>/posts/",
+        "posts/<slug:post_id>/comments/",
+        "posts/<slug:post_id>/comments/<slug:comment_id>/",
+    ]
+    return Response(response, status=status.HTTP_200_OK)
 
+
+class UserListView(generics.ListAPIView):
     authentication_classes = []
     serializer_class = UserSerializer
     queryset = AppUser.objects.all()
+
+    def get(self, request, *args, **kwargs):
+        if not settings.DEBUG:
+            return redirect("/api/user/")
+        return super().get(request, *args, **kwargs)
 
 
 class UserView(APIView):
