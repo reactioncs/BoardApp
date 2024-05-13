@@ -178,4 +178,5 @@ dmypy.json
 cython_debug/
 
 migrations/
+backend/media/
 package-lock.json

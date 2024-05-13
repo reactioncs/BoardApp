@@ -35,13 +35,15 @@ function PostWidget({ post }: { post: Post }) {
             <Typography color={main} sx={{ mt: "1rem" }}>
                 {post.content}
             </Typography>
-            <img
-                width="100%"
-                height="auto"
-                alt="post"
-                style={{ borderRadius: "0.75rem", marginTop: "0.75rem" }}
-                src={"/static/sample/4.jpg"}
-            />
+            {post.picture && (
+                <img
+                    width="100%"
+                    height="auto"
+                    alt="post"
+                    style={{ borderRadius: "0.75rem", marginTop: "0.75rem" }}
+                    src={post.picture}
+                />
+            )}
 
             <FlexBetween mt="0.25rem">
                 <FlexBetween gap="1rem">

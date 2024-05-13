@@ -14,18 +14,18 @@ import { useState } from "react";
 import axios from "axios";
 
 import { RootState } from "../state/store";
-import { Post } from "../types/contentTypes";
+import { Post, UploadedImage } from "../types/contentTypes";
 import WidgetWrapper from "../components/WidgetWrapper";
 import FlexBetween from "../components/FlexBetween";
 import UserImage from "../components/UserImage";
 import { setPosts } from "../state/authSlice";
+import Dropzone from "../components/Dropzone";
 
 function MyPostWidget() {
     const { palette } = useTheme();
     const dispatch = useDispatch();
-    // const [isImage, setIsImage] = useState(false);
-    // const [image, setImage] = useState(null);
     const [postInput, setPostInput] = useState("");
+    const [imageToUpload, setImageToUpload] = useState<File | null>(null);
     const user = useSelector((state: RootState) => state.auth.user);
     const posts = useSelector((state: RootState) => state.auth.posts);
     const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
@@ -37,9 +37,33 @@ function MyPostWidget() {
 
     const handlePost = async () => {
         try {
+            let imageUrl: string | undefined = undefined;
+
+            if (imageToUpload) {
+                const formData = new FormData();
+                formData.append("title", imageToUpload.name)
+                formData.append("file", imageToUpload)
+
+                const uploadUrl = `${import.meta.env.VITE_API_URL}/api/bucket/upload/`;
+                const response = await axios.post(uploadUrl, formData, {
+                    timeout: 60000,
+                    withCredentials: true,
+                    xsrfCookieName: 'csrftoken',
+                    xsrfHeaderName: 'X-CSRFToken',
+                    withXSRFToken: true,
+                    headers: {
+                        Accept: "application/json",
+                    },
+                });
+
+                const uploadedImage: UploadedImage = await response.data;
+                imageUrl = uploadedImage.file;
+            }
+
             const postUrl = `${import.meta.env.VITE_API_URL}/api/posts/`;
             const response = await axios.post(postUrl, {
-                content: postInput
+                content: postInput,
+                picture: imageUrl,
             }, {
                 timeout: 60000,
                 withCredentials: true,
@@ -55,6 +79,7 @@ function MyPostWidget() {
             dispatch(setPosts({ posts: [uploadedPost, ...posts] }));
         } finally {
             setPostInput("");
+            setImageToUpload(null);
         }
     };
 
@@ -87,10 +112,9 @@ function MyPostWidget() {
                         border={`1px solid ${palette.primary.light}`}
                         p="1rem"
                         width="100%"
-                        sx={{ "&:hover": { cursor: "pointer" } }}
                     >
                         <FlexBetween>
-                            <Typography>Add Image Here</Typography>
+                            <Dropzone image={imageToUpload} setImage={setImageToUpload} />
                             <EditOutlined />
                         </FlexBetween>
                     </Box>
@@ -99,7 +123,7 @@ function MyPostWidget() {
                         justifyContent="flex-start"
                         sx={{ width: "15%" }}
                     >
-                        <IconButton onClick={() => { }}>
+                        <IconButton onClick={() => setImageToUpload(null)}>
                             <DeleteOutlined />
                         </IconButton>
                     </FlexBetween>

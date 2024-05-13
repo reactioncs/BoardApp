@@ -1,6 +1,7 @@
 export interface Post {
     id: string;
     content: string;
+    picture?: string;
     comments: string[],
 }
 
@@ -14,4 +15,11 @@ export interface Friend {
     username: string;
     firstName: string;
     lastName: string;
+}
+
+export interface UploadedImage {
+    id: string;
+    title: string;
+    file: string;
+    created: string;
 }

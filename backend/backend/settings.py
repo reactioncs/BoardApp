@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     "corsheaders",
     "rest_framework",
     "api",
+    "bucket",
     "front_router",
 ]
 
