@@ -14,7 +14,7 @@ def size_validator(file):
 
 def save_file(instance, filename):
     _, ext = os.path.splitext(filename)
-    return f"{instance.id}{ext}"
+    return f"{uuid.uuid4()}{ext}"
 
 
 class ImageModel(models.Model):

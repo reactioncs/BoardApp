@@ -17,6 +17,7 @@ urlpatterns += [
     
     path("posts/", PostAPIView.as_view()),
     path("posts/<slug:post_id>/", PostAPIView.as_view()),
+    path("posts/<slug:post_id>/setPicture/", PostSetPictureAPIView.as_view()),
     path("posts/<slug:user_id>/posts/", PostAPIView.as_view()),
     path("posts/<slug:post_id>/comments/", CommentAPIView.as_view()),
     path("posts/<slug:post_id>/comments/<slug:comment_id>/", CommentAPIView.as_view()),

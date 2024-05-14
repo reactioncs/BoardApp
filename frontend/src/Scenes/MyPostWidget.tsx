@@ -37,7 +37,7 @@ function MyPostWidget() {
 
     const handlePost = async () => {
         try {
-            let imageUrl: string | undefined = undefined;
+            let uploadedImage: UploadedImage | null = null;
 
             if (imageToUpload) {
                 const formData = new FormData();
@@ -56,14 +56,12 @@ function MyPostWidget() {
                     },
                 });
 
-                const uploadedImage: UploadedImage = await response.data;
-                imageUrl = uploadedImage.file;
+                uploadedImage = await response.data;
             }
 
             const postUrl = `${import.meta.env.VITE_API_URL}/api/posts/`;
             const response = await axios.post(postUrl, {
                 content: postInput,
-                picture: imageUrl,
             }, {
                 timeout: 60000,
                 withCredentials: true,
@@ -74,8 +72,26 @@ function MyPostWidget() {
                     Accept: "application/json",
                 },
             });
+            
+            let uploadedPost: Post = await response.data;
 
-            const uploadedPost: Post = await response.data;
+            if (uploadedImage) {
+                const setPictureUrl = `${import.meta.env.VITE_API_URL}/api/posts/${uploadedPost.id}/setPicture/`;
+                const response = await axios.post(setPictureUrl, {
+                    pictureId: uploadedImage.id,
+                }, {
+                    timeout: 60000,
+                    withCredentials: true,
+                    xsrfCookieName: 'csrftoken',
+                    xsrfHeaderName: 'X-CSRFToken',
+                    withXSRFToken: true,
+                    headers: {
+                        Accept: "application/json",
+                    },
+                });
+                uploadedPost = await response.data;
+            }
+
             dispatch(setPosts({ posts: [uploadedPost, ...posts] }));
         } finally {
             setPostInput("");

@@ -18,17 +18,20 @@ from .models import *
 @permission_classes([AllowAny])
 def api_default(request):
     response = [
-        "user/register/",
-        "user/login/",
-        "user/logout/",
-        "user/delete/",
-        "user/",
-        "user/<slug:pk>/",
-        "posts/",
-        "posts/<slug:post_id>/",
-        "posts/<slug:user_id>/posts/",
-        "posts/<slug:post_id>/comments/",
-        "posts/<slug:post_id>/comments/<slug:comment_id>/",
+        "/api/user/register/",
+        "/api/user/login/",
+        "/api/user/logout/",
+        "/api/user/delete/",
+        "/api/user/",
+        "/api/user/<slug:pk>/",
+        "/api/posts/",
+        "/api/posts/<slug:post_id>/",
+        "/api/posts/<slug:post_id>/setPicture/"
+        "/api/posts/<slug:user_id>/posts/",
+        "/api/posts/<slug:post_id>/comments/",
+        "/api/posts/<slug:post_id>/comments/<slug:comment_id>/",
+        "/api/bucket/upload/",
+        "/api/bucket/delete/<slug:id>/",
     ]
     return Response(response, status=status.HTTP_200_OK)
 
@@ -160,12 +163,12 @@ class PostAPIView(APIView):
         serializer.save(user=self.request.user)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-    def delete(self, request, pk=None):
-        if pk is None:
+    def delete(self, request, post_id=None):
+        if post_id is None:
             return Response("Missing post id.", status=status.HTTP_400_BAD_REQUEST)
 
         try:
-            post = Post.objects.get(id=pk)
+            post = Post.objects.get(id=post_id)
         except Post.DoesNotExist:
             return Response("Post doesn't exist.", status=status.HTTP_404_NOT_FOUND)
 
@@ -174,6 +177,33 @@ class PostAPIView(APIView):
 
         post.delete()
         return Response("Post deleted.", status=status.HTTP_200_OK)
+
+
+class PostSetPictureAPIView(APIView):
+    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    permission_classes = [IsAuthenticated]
+    serializer_class = SetPictureSerializer
+
+    def post(self, request, post_id):
+        try:
+            serializer = SetPictureSerializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            pictureId = serializer.data["pictureId"]
+
+            post = Post.objects.get(id=post_id)
+
+            if len(pictureId) == 0:
+                post.picture = None
+            else:
+                image = ImageModel.objects.get(id=pictureId)
+                post.picture = image
+            post.save()
+        except Post.DoesNotExist:
+            return Response("Post doesn't exist.", status=status.HTTP_404_NOT_FOUND)
+        except ImageModel.DoesNotExist:
+            return Response("Picture doesn't exist.", status=status.HTTP_404_NOT_FOUND)
+
+        return Response(PostSerializer(post).data, status=status.HTTP_200_OK)
 
 
 class CommentAPIView(APIView):

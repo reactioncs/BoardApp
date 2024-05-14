@@ -28,11 +28,16 @@ class PostSerializer(serializers.ModelSerializer):
     firstName = serializers.ReadOnlyField(source="user.first_name")
     lastName = serializers.ReadOnlyField(source="user.last_name")
     userPicture = serializers.ReadOnlyField(source="user.profile_picture")
+    picture = serializers.ReadOnlyField(source="picture.file.url")
     comments = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
 
     class Meta:
         model = Post
         fields = ["id", "content", "picture", "userId", "firstName", "lastName", "userPicture", "comments", "created"]
+
+
+class SetPictureSerializer(serializers.Serializer):
+    pictureId = serializers.CharField(allow_blank=True, required=True)
 
 
 class CommentSerializer(serializers.ModelSerializer):

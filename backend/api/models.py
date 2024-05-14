@@ -1,6 +1,8 @@
 import uuid
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from bucket.models import ImageModel
+from django.core.exceptions import ObjectDoesNotExist
 
 
 class AppUser(AbstractUser):
@@ -20,13 +22,20 @@ class AppUser(AbstractUser):
 class Post(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     content = models.TextField()
-    picture = models.CharField(max_length=200, null=True, blank=True)
+    picture = models.OneToOneField(ImageModel, models.CASCADE, related_name="post")
 
     user = models.ForeignKey(AppUser, models.CASCADE, related_name="posts")
     liked_users = models.ManyToManyField(AppUser, blank=True, related_name="liked_posts")
 
     updated = models.DateTimeField(auto_now=True)
     created = models.DateTimeField(auto_now_add=True)
+
+    def delete(self, *args, **kwargs):
+        try:
+            self.picture.delete()
+        except ObjectDoesNotExist:
+            pass
+        return super().delete(*args, **kwargs)
 
 
 class Comment(models.Model):

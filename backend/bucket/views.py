@@ -3,6 +3,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from django.core.exceptions import ValidationError
+from rest_framework.authentication import BasicAuthentication, SessionAuthentication
+from rest_framework.permissions import IsAuthenticated
 
 from .serializers import *
 from .models import *
@@ -17,15 +19,13 @@ class ImageListApi(APIView):
         return Response(serializer.data)
 
 
-# The FileField and ImageField classes are only suitable for use with MultiPartParser or FileUploadParser.
-# Most parsers, such as e.g. JSON don't support file uploads.
-# Django's regular FILE_UPLOAD_HANDLERS are used for handling uploaded files.
 class ImageUploadApi(generics.CreateAPIView):
     """
     Upload one image.
     """
 
-    authentication_classes = []
+    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    permission_classes = [IsAuthenticated]
     serializer_class = ImageModelSerializer
 
 
@@ -34,7 +34,8 @@ class ImageDeleteApi(generics.DestroyAPIView):
     Delete one image.
     """
 
-    authentication_classes = []
+    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    permission_classes = [IsAuthenticated]
 
     def destroy(self, request, id):
         try:
