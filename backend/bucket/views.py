@@ -9,14 +9,21 @@ from rest_framework.permissions import IsAuthenticated
 from .serializers import *
 from .models import *
 
+
 class ImageListApi(APIView):
     """
     Get all saved images.
     """
 
-    def get(self, request):
-        serializer = ImageModelSerializer(ImageModel.objects.all().order_by('created'), many=True)
-        return Response(serializer.data)
+    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    permission_classes = [IsAuthenticated]
+    serializer_class = ImageModelSerializer
+    queryset = ImageModel.objects.all().order_by('created')
+
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['request'] = None
+        return context
 
 
 class ImageUploadApi(generics.CreateAPIView):
@@ -27,6 +34,11 @@ class ImageUploadApi(generics.CreateAPIView):
     authentication_classes = [SessionAuthentication, BasicAuthentication]
     permission_classes = [IsAuthenticated]
     serializer_class = ImageModelSerializer
+
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['request'] = None
+        return context
 
 
 class ImageDeleteApi(generics.DestroyAPIView):
