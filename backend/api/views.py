@@ -192,6 +192,9 @@ class PostSetPictureAPIView(APIView):
 
             post = Post.objects.get(id=post_id)
 
+            if not (post.user.id == request.user.id or request.user.is_superuser):
+                return Response("Authentication error.", status=status.HTTP_401_UNAUTHORIZED)
+
             if len(pictureId) == 0:
                 post.picture = None
             else:

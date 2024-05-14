@@ -22,7 +22,7 @@ class AppUser(AbstractUser):
 class Post(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     content = models.TextField()
-    picture = models.OneToOneField(ImageModel, models.CASCADE, related_name="post")
+    picture = models.OneToOneField(ImageModel, models.CASCADE, null=True, related_name="post")
 
     user = models.ForeignKey(AppUser, models.CASCADE, related_name="posts")
     liked_users = models.ManyToManyField(AppUser, blank=True, related_name="liked_posts")
