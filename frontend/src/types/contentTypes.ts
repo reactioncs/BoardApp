@@ -1,7 +1,10 @@
 export interface Post {
     id: string;
     content: string;
+    userId: string;
     picture?: string;
+    firstName: string;
+    lastName: string;
     comments: string[],
 }
 

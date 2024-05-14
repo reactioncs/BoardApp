@@ -56,8 +56,8 @@ function PostWidget({ post }: { post: Post }) {
     return (
         <WidgetWrapper m="2rem 0">
             <FriendBox
-                id={"postUserId"}
-                name={"Mike"}
+                id={post.userId}
+                name={post.firstName}
                 subtitle={"New york"}
                 picPath={"/static/sample/2.jpg"}
             />
